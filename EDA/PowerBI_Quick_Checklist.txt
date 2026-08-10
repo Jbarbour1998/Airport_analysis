@@ -1,0 +1,19 @@
+POWER BI QUICK CHECKLIST
+
+[ ] Import RetailDataTable and PassengerDataTable
+[ ] Rename queries Retail and Passengers
+[ ] Create Date table
+[ ] Mark Date table
+[ ] Sort Month and Year Month
+[ ] Create Date → Retail and Date → Passengers relationships
+[ ] Import custom theme
+[ ] Create DAX measures
+[ ] Build Executive Overview
+[ ] Build Outlet Performance
+[ ] Build YoY and YTD page
+[ ] Add Data Quality page
+[ ] Synchronise slicers
+[ ] Add Reset Filters bookmark
+[ ] Validate passenger totals are not duplicated
+[ ] Test the outlier sensitivity
+[ ] Write no more than five findings

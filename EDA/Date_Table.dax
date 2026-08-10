@@ -1,0 +1,27 @@
+Date =
+VAR RetailDates =
+    SELECTCOLUMNS(
+        Retail,
+        "DateValue", Retail[date]
+    )
+VAR PassengerDates =
+    SELECTCOLUMNS(
+        Passengers,
+        "DateValue", Passengers[date]
+    )
+VAR AllDates =
+    UNION(RetailDates, PassengerDates)
+VAR MinimumDate =
+    MINX(AllDates, [DateValue])
+VAR MaximumDate =
+    MAXX(AllDates, [DateValue])
+RETURN
+    ADDCOLUMNS(
+        CALENDAR(MinimumDate, MaximumDate),
+        "Year", YEAR([Date]),
+        "Month Number", MONTH([Date]),
+        "Month", FORMAT([Date], "MMM"),
+        "Year Month", FORMAT([Date], "MMM yyyy"),
+        "Year Month Sort", YEAR([Date]) * 100 + MONTH([Date]),
+        "Quarter", "Q" & QUARTER([Date])
+    )

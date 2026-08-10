@@ -1,0 +1,242 @@
+// ============================================================
+// BASE MEASURES
+// ============================================================
+
+Total Sales =
+SUM(Retail[total_sales])
+
+Total Transactions =
+SUM(Retail[transactions])
+
+Total Passengers =
+SUM(Passengers[passenger_amount])
+
+Average Transaction Value =
+DIVIDE(
+    [Total Sales],
+    [Total Transactions]
+)
+
+Active Outlets =
+DISTINCTCOUNT(Retail[outlet_name])
+
+Total Active Sqm =
+SUMX(
+    VALUES(Retail[outlet_name]),
+    CALCULATE(MAX(Retail[unit_size_sqm]))
+)
+
+Sales per Sqm =
+DIVIDE(
+    [Total Sales],
+    [Total Active Sqm]
+)
+
+Sales per 1,000 Passengers =
+DIVIDE(
+    [Total Sales],
+    [Total Passengers]
+) * 1000
+
+Transactions per 1,000 Passengers =
+DIVIDE(
+    [Total Transactions],
+    [Total Passengers]
+) * 1000
+
+Estate Sales Share =
+DIVIDE(
+    [Total Sales],
+    CALCULATE(
+        [Total Sales],
+        REMOVEFILTERS(Retail[outlet_name])
+    )
+)
+
+
+// ============================================================
+// PRIOR-YEAR AND YEAR-ON-YEAR MEASURES
+// ============================================================
+
+Sales Prior Year =
+CALCULATE(
+    [Total Sales],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Sales YoY Change =
+[Total Sales] - [Sales Prior Year]
+
+Sales YoY % =
+DIVIDE(
+    [Sales YoY Change],
+    [Sales Prior Year]
+)
+
+Transactions Prior Year =
+CALCULATE(
+    [Total Transactions],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Transactions YoY % =
+DIVIDE(
+    [Total Transactions] - [Transactions Prior Year],
+    [Transactions Prior Year]
+)
+
+Passengers Prior Year =
+CALCULATE(
+    [Total Passengers],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Passengers YoY % =
+DIVIDE(
+    [Total Passengers] - [Passengers Prior Year],
+    [Passengers Prior Year]
+)
+
+Average Transaction Value Prior Year =
+CALCULATE(
+    [Average Transaction Value],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Average Transaction Value YoY % =
+DIVIDE(
+    [Average Transaction Value] - [Average Transaction Value Prior Year],
+    [Average Transaction Value Prior Year]
+)
+
+
+// ============================================================
+// YEAR-TO-DATE MEASURES
+// ============================================================
+
+Sales YTD =
+TOTALYTD(
+    [Total Sales],
+    'Date'[Date]
+)
+
+Sales YTD Prior Year =
+CALCULATE(
+    [Sales YTD],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Sales YTD YoY % =
+DIVIDE(
+    [Sales YTD] - [Sales YTD Prior Year],
+    [Sales YTD Prior Year]
+)
+
+Transactions YTD =
+TOTALYTD(
+    [Total Transactions],
+    'Date'[Date]
+)
+
+Transactions YTD Prior Year =
+CALCULATE(
+    [Transactions YTD],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Transactions YTD YoY % =
+DIVIDE(
+    [Transactions YTD] - [Transactions YTD Prior Year],
+    [Transactions YTD Prior Year]
+)
+
+Passengers YTD =
+TOTALYTD(
+    [Total Passengers],
+    'Date'[Date]
+)
+
+Passengers YTD Prior Year =
+CALCULATE(
+    [Passengers YTD],
+    SAMEPERIODLASTYEAR('Date'[Date])
+)
+
+Passengers YTD YoY % =
+DIVIDE(
+    [Passengers YTD] - [Passengers YTD Prior Year],
+    [Passengers YTD Prior Year]
+)
+
+Average Transaction Value YTD =
+DIVIDE(
+    [Sales YTD],
+    [Transactions YTD]
+)
+
+Average Transaction Value YTD Prior Year =
+DIVIDE(
+    [Sales YTD Prior Year],
+    [Transactions YTD Prior Year]
+)
+
+Average Transaction Value YTD YoY % =
+DIVIDE(
+    [Average Transaction Value YTD] - [Average Transaction Value YTD Prior Year],
+    [Average Transaction Value YTD Prior Year]
+)
+
+Transactions per 1,000 Passengers YTD =
+DIVIDE(
+    [Transactions YTD],
+    [Passengers YTD]
+) * 1000
+
+
+// ============================================================
+// DATA-QUALITY AND SENSITIVITY MEASURES
+// ============================================================
+
+Flagged Row Count =
+CALCULATE(
+    COUNTROWS(Retail),
+    Retail[data_quality_flag] = "Review"
+)
+
+Flagged Sales =
+CALCULATE(
+    [Total Sales],
+    Retail[data_quality_flag] = "Review"
+)
+
+Total Sales Excluding Flagged Rows =
+CALCULATE(
+    [Total Sales],
+    Retail[data_quality_flag] <> "Review"
+)
+
+Flagged Sales Impact =
+[Total Sales] - [Total Sales Excluding Flagged Rows]
+
+
+// ============================================================
+// COMMON 12-MONTH COMPARISON
+// ============================================================
+
+Common-Period Sales =
+CALCULATE(
+    [Total Sales],
+    Retail[common_12_month_period] = "Yes"
+)
+
+Common-Period Transactions =
+CALCULATE(
+    [Total Transactions],
+    Retail[common_12_month_period] = "Yes"
+)
+
+Common-Period Average Transaction Value =
+DIVIDE(
+    [Common-Period Sales],
+    [Common-Period Transactions]
+)
